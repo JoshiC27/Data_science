@@ -1,0 +1,70 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1504\cocoasubrtf830
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 total_patient_data.columns=['Day','Time','Code','Value']\
+\
+#print total_patient_data.shape\
+\
+#print total_patient_data.head()\
+ \
+post_breakfast_sugar=total_patient_data[total_patient_data['Code']==58]\
+post_breakfast_sugar.head()\
+\
+#post_breakfast_sugar['Day']=pd.to_datetime(post_breakfast_sugar['Day'])#.dt.strftime('%m-%d-%Y')\
+#post_breakfast_sugar.index = post_breakfast_sugar['Day'] \
+post_breakfast_sugar.loc[:,'Month']=pd.to_datetime(post_breakfast_sugar['Day'])[:].dt.month\
+post_breakfast_sugar.loc[:,'Year']=pd.to_datetime(post_breakfast_sugar['Day'])[:].dt.year\
+print post_breakfast_sugar.head()\
+#post_breakfast_sugar=post_breakfast_sugar.resample('M').mean()\
+post_breakfast_sugar=post_breakfast_sugar.loc[:,['Value','Month','Year']]\
+print post_breakfast_sugar.head()\
+print post_breakfast_sugar[post_breakfast_sugar['Month']==4]['Month'].value_counts()\
+#post_breakfast_sugar['Value'].groupby([post_breakfast_sugar['Month'], post_breakfast_sugar['Year']]).mean()\
+post_breakfast_sugar_grped=post_breakfast_sugar.groupby(['Month','Year']).mean()\
+\
+fresh_data=post_breakfast_sugar_grped.reset_index()\
+print fresh_data.head()\
+plt.plot(fresh_data['Month'],fresh_data['Value'])\
+plt.show()\
+\
+\
+\
+#### Importing the dataset \
+##### The dataset has been obtained from \
+##### https://archive.ics.uci.edu/ml/datasets/diabetes\
+\
+### Local location of the dataset\
+location='Diabetes-Data/data-'\
+patents_numb=["%.2d" % i for i in range(2,3)]\
+total_patient_data=pd.DataFrame()\
+post_breakfast_sugar_data=pd.DataFrame()\
+### Generating a big dataframe combining  all the datasets\
+for index in range(len(patents_numb)):\
+    post_breakfast_sugar_grped=pd.DataFrame()\
+    data=pd.read_csv(''.join([location,patents_numb[index]]), sep='\\t',header=None)\
+    data['Patient']=''.join(['Patient-',patents_numb[index]])\
+    data = data.reset_index(drop=True)\
+    data.index=data['Patient']\
+    del data['Patient']\
+    #total_patient_data=total_patient_data.append(data,ignore_index=False)\
+    data.columns=['Day','Time','Code','Value']\
+    post_breakfast_sugar=data[data['Code']==58]\
+    post_breakfast_sugar.loc[:,'Month']=pd.to_datetime(post_breakfast_sugar['Day'])[:].dt.month\
+    post_breakfast_sugar.loc[:,'Year']=pd.to_datetime(post_breakfast_sugar['Day'])[:].dt.year\
+    post_breakfast_sugar=post_breakfast_sugar.loc[:,['Value','Month','Year']]\
+    print post_breakfast_sugar.head(100)\
+    post_breakfast_sugar_grped=post_breakfast_sugar.groupby(['Month','Year']).mean()\
+    post_breakfast_sugar_grped=post_breakfast_sugar_grped.reset_index(drop=True)\
+    post_breakfast_sugar_grped['Patient']=''.join(['Patient-',patents_numb[index]])\
+    post_breakfast_sugar_grped = post_breakfast_sugar_grped.reset_index(drop=True)\
+    post_breakfast_sugar_grped.index=post_breakfast_sugar_grped['Patient']\
+    del post_breakfast_sugar_grped['Patient']\
+    print post_breakfast_sugar_grped.head()\
+    post_breakfast_sugar_data=post_breakfast_sugar_data.append(post_breakfast_sugar_grped,ignore_index=False) \
+#print total_patient_data.tail()    \
+\
+post_breakfast_sugar_data.head(10)}
