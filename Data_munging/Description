@@ -1,0 +1,4 @@
+This folder contains data sets from NYC schools about SAT Score.
+The dataset is available here https://data.cityofnewyork.us/Education/2012-SAT-Results/f9bf-2cp4
+The exercise combines and reads various data sets to gain meaningful information using 
+data cleaning techniques. 
