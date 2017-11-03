@@ -1,0 +1,5 @@
+This folder contains a dataset obtained https://archive.ics.uci.edu/ml/datasets/diabetes
+The exercise combines pulling datasets for various patients to create a bigger datframe.
+Data Cleaning
+Time series method to evaluate the glucose levels of various patients after 
+various activities.
